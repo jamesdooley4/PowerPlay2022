@@ -42,7 +42,7 @@ public class DrivebaseSubsystem
         public static final double MAX_RPM = 312; // 2021: 6000;
 
         @UseDriveEncoder
-        public static final boolean RUN_USING_ENCODER = true;
+        public static final boolean RUN_USING_ENCODER = false;
 
         @MotorVeloPID
         public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(
@@ -135,18 +135,12 @@ public class DrivebaseSubsystem
     // @Log.Number(name = "RR")
     public EncodedMotor<DcMotorEx> rr2;
 
-    @Log
-    public String locState = "none";
-
-    public OdoSubsystem odometry;
-
     public DrivebaseSubsystem(
         EncodedMotor<DcMotorEx> fl,
         EncodedMotor<DcMotorEx> fr,
         EncodedMotor<DcMotorEx> rl,
         EncodedMotor<DcMotorEx> rr,
-        IMU i,
-        OdoSubsystem odo
+        IMU i
     ) {
         super(fl, fr, rl, rr, i, () -> DriveConstants.class);
         fl2 = fl;
@@ -154,14 +148,6 @@ public class DrivebaseSubsystem
         rl2 = rl;
         rr2 = rr;
         speed = DriveConstants.SLOW_MOTOR_SPEED;
-        odometry = odo;
-
-        if (this.getLocalizer() != null) {
-            this.setLocalizer(new OverrideLocalizer(this.getLocalizer(), odo, this));
-            locState = "created";
-        } else {
-            locState = "not created";
-        }
     }
 
     public void fast() {

@@ -24,24 +24,21 @@ public class DriveCommand implements Command, Loggable {
     public DoubleSupplier x, y, r;
     public BooleanSupplier straight;
     public BooleanSupplier watchTrigger;
-    public VisionPipeline visionPipeline;
 
     public DriveCommand(
         DrivebaseSubsystem sub,
         Stick stick1,
         Stick stick2,
         BooleanSupplier straighten,
-        BooleanSupplier watchAndAlign,
-        VisionPipeline vp
+        BooleanSupplier watchAndAlign
     ) {
-        addRequirements(sub, sub.odometry);
+        addRequirements(sub);
         subsystem = sub;
         x = stick1.getXSupplier();
         y = stick1.getYSupplier();
         r = stick2.getXSupplier();
         straight = straighten;
         watchTrigger = watchAndAlign;
-        visionPipeline = vp;
     }
 
     public DriveCommand(
@@ -50,11 +47,11 @@ public class DriveCommand implements Command, Loggable {
         Stick stick2,
         BooleanSupplier straighten
     ) {
-        this(sub, stick1, stick2, straighten, null, null);
+        this(sub, stick1, stick2, straighten, null);
     }
 
     public DriveCommand(DrivebaseSubsystem sub, Stick stick1, Stick stick2) {
-        this(sub, stick1, stick2, null, null, null);
+        this(sub, stick1, stick2, null, null);
     }
 
     private double getRotation(double headingInRads) {
@@ -111,56 +108,6 @@ public class DriveCommand implements Command, Loggable {
         double rotPower = getRotationClosest45(curHeading);
         if (Math.abs(rotPower) > .000001) {
             subsystem.setWeightedDrivePower(new Pose2d(0, 0, rotPower));
-        } else {
-            // Look for the current junctionX/junctionY
-            double jx = visionPipeline.getJunctionX();
-            double jy = visionPipeline.getJunctionY();
-            if (jx == 0.0 && jy == 0.0) {
-                return;
-            }
-            if (jx > JunctionDetection.OnlyXRight.RIGHT_CENTER) {
-                subsystem.setWeightedDrivePower(
-                    new Pose2d(
-                        // moving only x, to the right
-                        Range.clip(
-                            (jx - JunctionDetection.OnlyXRight.RIGHT_CENTER) /
-                            JunctionDetection.OnlyXRight.RIGHT_RANGE,
-                            0,
-                            0.3
-                        ),
-                        0,
-                        0
-                    )
-                );
-            } else if (jx < JunctionDetection.OnlyXLeft.LEFT_CENTER) {
-                subsystem.setWeightedDrivePower(
-                    new Pose2d(
-                        // moving only x, to the left
-                        Range.clip(
-                            (jx - JunctionDetection.OnlyXLeft.LEFT_CENTER) /
-                            JunctionDetection.OnlyXLeft.LEFT_RANGE,
-                            -0.3,
-                            0
-                        ),
-                        0,
-                        0
-                    )
-                );
-            } else if (jy < JunctionDetection.OnlyYForward.FORWARD_CENTER && jy > 10) {
-                subsystem.setWeightedDrivePower(
-                    new Pose2d(
-                        0,
-                        // Moving y forward
-                        Range.clip(
-                            (jy - JunctionDetection.OnlyYForward.FORWARD_CENTER) /
-                            JunctionDetection.OnlyYForward.FORWARD_RANGE,
-                            -0.3,
-                            0
-                        ),
-                        0
-                    )
-                );
-            }
         }
     }
 

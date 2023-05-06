@@ -10,7 +10,6 @@ public class AutoRightParkingLeft extends SequentialCommandGroup {
 
     public AutoRightParkingLeft(Robot r) {
         super(
-            new ClawCloseCommand(r.clawSubsystem),
             new TrajectorySequenceCommand(
                 r.drivebaseSubsystem,
                 AutoConstants.Right.START_TO_LEFT_PARK

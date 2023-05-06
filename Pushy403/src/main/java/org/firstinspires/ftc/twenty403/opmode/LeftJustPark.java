@@ -12,7 +12,7 @@ import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.command.VisionCommand;
 import org.firstinspires.ftc.twenty403.command.autonomous.AutoConstants;
 import org.firstinspires.ftc.twenty403.command.autonomous.StartingPosition;
-import org.firstinspires.ftc.twenty403.command.autonomous.left.AutoLeftParkingSelectionJustParkCommand;
+import org.firstinspires.ftc.twenty403.command.autonomous.left.AutoLeftParkLeft;
 import org.firstinspires.ftc.twenty403.controls.ControlSingle;
 
 @Autonomous(name = "Left Just Park")
@@ -33,13 +33,10 @@ public class LeftJustPark extends CommandOpMode {
             .getInstance()
             .scheduleForState(
                 new SequentialCommandGroup(
-                    new AutoLeftParkingSelectionJustParkCommand(robot),
+                    new AutoLeftParkLeft(robot),
                     CommandScheduler.getInstance()::terminateOpMode
                 ),
                 CommandOpMode.OpModeState.RUN
             );
-        if (Robot.RobotConstant.CAMERA_CONNECTED) {
-            CommandScheduler.getInstance().scheduleInit(new VisionCommand(robot.visionSystem));
-        }
     }
 }

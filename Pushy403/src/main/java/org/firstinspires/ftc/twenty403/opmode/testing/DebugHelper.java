@@ -35,11 +35,6 @@ public class DebugHelper extends CommandOpMode {
         telemetry.addData("ExternalHeading", robot.drivebaseSubsystem.getExternalHeading());
         telemetry.addData("ExternalHeadingVelocity", robot.drivebaseSubsystem.getExternalHeadingVelocity());
         */
-        telemetry.addData("Cone Close:", robot.clawSubsystem.isConeClose());
-        telemetry.addData("Cone Alliance:", robot.clawSubsystem.isAllianceCone());
-        telemetry.addData("isClawClosed:", robot.clawSubsystem.isClawClose());
-        telemetry.addData("Cone Distance:", hardware.clawDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("Cone Color:", hardware.clawDistance.argb());
         telemetry.addData("VOLTAGE:", robot.initialVoltage);
         // telemetry.update();
     }

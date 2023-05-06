@@ -36,13 +36,6 @@ public class ControlOperator {
         override = g.leftTrigger.getAsButton(0.5);
 
         AssignNamedControllerButton();
-
-        if (Robot.RobotConstant.CLAW_CONNECTED) {
-            bindClawControls();
-        }
-        if (Robot.RobotConstant.LIFT_CONNECTED) {
-            bindLiftControls();
-        }
     }
 
     private void AssignNamedControllerButton() {
@@ -57,44 +50,5 @@ public class ControlOperator {
         liftHighOrOverrideZero = gamepad.triangle;
         liftGroundOrOverrideDown = gamepad.cross;
         liftLowOrOverrideUp = gamepad.square;
-    }
-
-    public void bindClawControls() {
-        clawOpenButton.whenPressed(new ClawOpenCommand(robot.clawSubsystem));
-        clawCloseButton.whenReleased(new ClawCloseCommand(robot.clawSubsystem));
-    }
-
-    public void bindLiftControls() {
-        liftUpButton.whenPressed(new LiftUpCommand(robot.liftSubsystem));
-        liftDownButton.whenPressed(new LiftDownCommand(robot.liftSubsystem));
-        liftIntakePos.whenPressed(new LiftIntakeCommand(robot.liftSubsystem));
-        liftHighOrOverrideZero.whenPressed(
-            new ConditionalCommand(
-                override,
-                new LiftSetZeroCommand(robot.liftSubsystem),
-                new LiftHighJunctionCommand(robot.liftSubsystem)
-            )
-        );
-        liftMediumOrToggleAutoClose.whenPressed(
-            new ConditionalCommand(
-                override,
-                new ClawAutoCloseToggleCommand(robot.clawSubsystem),
-                new LiftMidJunctionCommand(robot.liftSubsystem)
-            )
-        );
-        liftGroundOrOverrideDown.whenPressed(
-            new ConditionalCommand(
-                override,
-                new LiftMoveDownOverrideCommand(robot.liftSubsystem),
-                new LiftGroundJunctionCommand(robot.liftSubsystem)
-            )
-        );
-        liftLowOrOverrideUp.whenPressed(
-            new ConditionalCommand(
-                override,
-                new LiftMoveUpOverrideCommand(robot.liftSubsystem),
-                new LiftLowJunctionCommand(robot.liftSubsystem)
-            )
-        );
     }
 }

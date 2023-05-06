@@ -10,7 +10,6 @@ public class AutoRightParkingMiddle extends SequentialCommandGroup {
 
     public AutoRightParkingMiddle(Robot r) {
         super(
-            new ClawCloseCommand(r.clawSubsystem),
             new TrajectorySequenceCommand(
                 r.drivebaseSubsystem,
                 AutoConstants.Right.START_TO_MIDDLE_PARK

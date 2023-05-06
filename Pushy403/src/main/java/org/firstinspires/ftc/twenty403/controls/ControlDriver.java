@@ -34,24 +34,16 @@ public class ControlDriver {
     public CommandButton resetGyroButton, driveStraight, turboButton, autoAlign;
     public CommandButton clawToggleAutoCloseButton;
     public CommandButton override;
-    VisionPipeline visionPipeline;
 
     public ControlDriver(CommandGamepad g, Robot r) {
         this.robot = r;
         gamepad = g;
         override = g.leftTrigger.getAsButton(0.5);
-        visionPipeline = robot.visionSystem.visionPipeline;
 
         AssignNamedControllerButton();
 
         if (Robot.RobotConstant.DRIVE_CONNECTED) {
             bindDriveControls();
-        }
-        if (Robot.RobotConstant.CLAW_CONNECTED) {
-            bindClawControls();
-        }
-        if (Robot.RobotConstant.CAMERA_CONNECTED) {
-            bindVisionCommand();
         }
     }
 
@@ -81,8 +73,7 @@ public class ControlDriver {
                     driveLeftStick,
                     driveRightStick,
                     driveStraight,
-                    autoAlign,
-                    visionPipeline
+                    autoAlign
                 )
             );
         turboButton.whenPressed(new TurboCommand(robot.drivebaseSubsystem));
@@ -94,13 +85,5 @@ public class ControlDriver {
         tileUp.whenPressed(new TileMoveCommand(robot, TileMoving.Up));
         tileDown.whenPressed(new TileMoveCommand(robot, TileMoving.Down));
         tileAbort.whenPressed(new TileAbortCommand(robot));
-    }
-
-    public void bindVisionCommand() {
-        gamepad.share.whenPressed(new VisionDuringTeleCommand(robot.visionSystem));
-    }
-
-    public void bindClawControls() {
-        clawToggleAutoCloseButton.whenPressed(new ClawAutoCloseToggleCommand(robot.clawSubsystem));
     }
 }
